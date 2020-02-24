@@ -17,27 +17,18 @@ import {
   StatusBar,
   ImageBackground,
 } from 'react-native';
-import {
-  Header,
-  LearnMoreLinks,
-  Colors,
-  DebugInstructions,
-  ReloadInstructions,
-} from 'react-native/Libraries/NewAppScreen';
 
 import {Login} from './src/components/Login';
 import {Voteview} from './src/components/Voteview';
 import {GooglePlacesInput} from './src/components/GooglePlacesInput';
 
 
+
 const App: () => React$Node = () => {
   return (
-    // <View style={{justifyContent: "center", alignItems: "center"}}>
-    //    <Voteview />
-    //  </View>
-    <ImageBackground source={require('./src/assets/img/background.jpg')} 
+    <ImageBackground source={require('./src/assets/img/backgroundd.jpg')} 
       style={styles.container}>
-      <Login />
+      <GooglePlacesInput />
     </ImageBackground>
   );
 };
@@ -54,3 +45,15 @@ const styles =StyleSheet.create({
 
 export default App;
 
+
+
+// const App = createDrawerNavigator({
+//   Home: {
+//     screen: PrivacyPolicy
+//   },
+//   Settings: {
+//     screen: SettingsScreen
+//   }
+// });
+
+// export default createAppContainer(App);
