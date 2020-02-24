@@ -32,7 +32,7 @@ const styles =StyleSheet.create({
     color:'black',
     fontFamily: Fonts.Latoregular,
     fontSize: 18,
-    paddingTop:20,
+    paddingTop:10,
     textAlign:'center'
 
 

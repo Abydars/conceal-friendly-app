@@ -8,7 +8,10 @@ import { Divider } from 'react-native';
 
 const Voteview = () => {
     return(
-         <View style={{backgroundColor:'white',width:'100%',height:'70%'}}>
+         <View style={{backgroundColor:'white',width:'85%',height: '34%',
+         position: 'absolute', 
+         top: 450, 
+         borderRadius:10,}}>
             <Text style={styles.placename}>Place Name Here</Text>
             <View style={styles.thumbs}>
                <Thumbsup></Thumbsup>
@@ -22,9 +25,9 @@ const styles =StyleSheet.create({
     placename:{
         color:'black',
         fontFamily: Fonts.Latoregular,
-        fontSize: 39,
+        fontSize: 35,
         padding:20,
-        paddingTop:50,
+        paddingTop:20,
         paddingBottom:50,
         textAlign:'center'
 

@@ -4,6 +4,7 @@ import { GooglePlacesAutocomplete } from 'react-native-google-places-autocomplet
  
 const homePlace = { description: 'Home', geometry: { location: { lat: 48.8152937, lng: 2.4597668 } }};
 const workPlace = { description: 'Work', geometry: { location: { lat: 48.8496818, lng: 2.2940881 } }};
+
  
 const GooglePlacesInput = () => {
   return (
@@ -31,13 +32,21 @@ const GooglePlacesInput = () => {
  
       styles={{
         textInputContainer: {
-          width: '100%'
+          width: '100%',
+          backgroundColor: 'white',
+
+        },
+        textInput: {
+          height: 50,
+          color: 'black',
+          fontSize: 16
         },
         description: {
           fontWeight: 'bold'
         },
         predefinedPlacesDescription: {
-          color: '#1faadb'
+          color: 'black',
+          backgroundColor:'white'
         }
       }}
  
@@ -62,10 +71,12 @@ const GooglePlacesInput = () => {
       predefinedPlaces={[homePlace, workPlace]}
  
       debounce={200} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
-      renderLeftButton={()  => <Text>Custom text after the input</Text>}
-      renderRightButton={() => <Text>Custom text after the input</Text>}
-    />
-
+      renderLeftButton={()  =>  <Image source={require('../assets/img/Logo-Icon.png')} 
+      style={{width:80,height:70,padding:20}} />}
+      renderRightButton={() =>  <Image source={require('../assets/img/Menu-Icon.png')} 
+      style={{width:80,height:70}} />}
+     />
+    
       );
     }
 
