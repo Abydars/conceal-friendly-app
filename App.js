@@ -1,59 +1,56 @@
-/**
- * Sample React Native App
- * https://github.com/facebook/react-native
- *
- * @format
- * @flow
- */
-
 import React from 'react';
 import {
-  SafeAreaView,
-  StyleSheet,
-  ScrollView,
-  View,
-  Text,
-  Image,
-  StatusBar,
-  ImageBackground,
+    StyleSheet,
+    ImageBackground,
 } from 'react-native';
+import {Login} from "./src/components/Login";
+import {createDrawerNavigator} from '@react-navigation/drawer';
+import {createStackNavigator} from '@react-navigation/stack';
+import {NavigationContainer} from '@react-navigation/native';
+import {GooglePlacesInput} from "./src/components/GooglePlacesInput";
+import Home from "./src/components/Home";
+import ContactScreen from "./src/components/ContactScreen";
+import AboutScreen from "./src/components/AboutScreen";
+import SplashScreen from "./src/components/SplashScreen";
+import LogoutScreen from "./src/components/LogoutScreen";
 
-import {Login} from './src/components/Login';
-import {Voteview} from './src/components/Voteview';
-import {GooglePlacesInput} from './src/components/GooglePlacesInput';
+const Stack = createStackNavigator();
+const Drawer = createDrawerNavigator();
 
+const HomeNavigation = () => (
+    <Drawer.Navigator initialRouteName="Home" drawerPosition={"right"} drawerType={"slide"}>
+        <Drawer.Screen name="Home" component={Home}/>
+        <Drawer.Screen name="Contact Support" component={ContactScreen}/>
+        <Drawer.Screen name="About" component={AboutScreen}/>
+        <Drawer.Screen name="Logout" component={LogoutScreen}/>
+    </Drawer.Navigator>
+);
 
+const AppContainer = () => (
+    <NavigationContainer>
+        <Stack.Navigator
+            initialRouteName={"SplashScreen"}
+            headerMode={"none"}>
+            <Stack.Screen
+                name="SplashScreen"
+                component={SplashScreen}
+            />
+            <Stack.Screen
+                name="Login"
+                component={Login}
+            />
+            <Stack.Screen
+                name="Home"
+                component={HomeNavigation}
+            />
+        </Stack.Navigator>
+    </NavigationContainer>
+);
 
-const App: () => React$Node = () => {
-  return (
-    <ImageBackground source={require('./src/assets/img/backgroundd.jpg')} 
-      style={styles.container}>
-      <GooglePlacesInput />
-    </ImageBackground>
-  );
-};
-
-const styles =StyleSheet.create({
-
-  container: {
-    width: '100%', 
-    height: '100%',
-    alignItems: 'center'
-  },
-
-})
-
-export default App;
-
-
-
-// const App = createDrawerNavigator({
-//   Home: {
-//     screen: PrivacyPolicy
-//   },
-//   Settings: {
-//     screen: SettingsScreen
-//   }
-// });
-
-// export default createAppContainer(App);
+export default class App extends React.Component {
+    render() {
+        return (
+            <AppContainer/>
+        );
+    }
+}
