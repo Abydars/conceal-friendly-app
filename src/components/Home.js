@@ -1,11 +1,13 @@
 import React from 'react';
-import {View, Text, StyleSheet, Image, TouchableOpacity} from 'react-native';
-import MapView, {PROVIDER_GOOGLE} from 'react-native-maps';
+import {View, Text, StyleSheet, Image, TouchableOpacity, Alert} from 'react-native';
+import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import {GlobalStyles} from "../helpers/GlobalStyles";
 import {Container, Content, getTheme, material, StyleProvider} from "native-base";
 import {VoteView} from "./Voteview";
+import Geolocation from '@react-native-community/geolocation';
+import {GetLocation} from "../helpers/Util";
 
 const homePlace = {description: 'Home', geometry: {location: {lat: 48.8152937, lng: 2.4597668}}};
 const workPlace = {description: 'Work', geometry: {location: {lat: 48.8496818, lng: 2.2940881}}};
@@ -90,15 +92,57 @@ export default class Home extends React.Component {
 
     constructor(props) {
         super(props);
+
+        this.state = {
+            currentLocation: {
+                latitude: 37.78825,
+                longitude: -122.4324
+            },
+            locationName: "",
+            locationId: "X"
+        };
     }
 
     componentDidMount() {
-        if (navigator.geolocation !== undefined) {
-            console.warn(navigator.geolocation);
-        }
+        Geolocation.getCurrentPosition(
+            position => {
+                const currentLocation = {
+                    latitude: position.coords.latitude,
+                    longitude: position.coords.longitude,
+                };
+
+                this.setState({
+                    currentLocation
+                });
+
+                GetLocation(currentLocation)
+                    .then(res => {
+                        let locationName = res.results[0].formatted_address;
+                        let locationId = res.plus_code.global_code;
+
+                        // for (let i in res.results[0].address_components) {
+                        //     let component = res.results[0].address_components[i];
+                        //
+                        //     if (component.types.indexOf('premise') > -1) {
+                        //         locationName = component.long_name;
+                        //         break;
+                        //     }
+                        // }
+
+                        this.setState({
+                            locationName,
+                            locationId
+                        });
+                    });
+            },
+            error => Alert.alert('Error', 'Error locating, please try again'),
+            {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+        );
     }
 
     render() {
+        const {currentLocation, locationName, locationId} = this.state;
+
         return (
             <View style={GlobalStyles.container}>
                 <View style={styles.mapViewContainer}>
@@ -106,12 +150,13 @@ export default class Home extends React.Component {
                         provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                         style={styles.map}
                         region={{
-                            latitude: 37.78825,
-                            longitude: -122.4324,
+                            latitude: currentLocation.latitude,
+                            longitude: currentLocation.longitude,
                             latitudeDelta: 0.015,
                             longitudeDelta: 0.0121,
                         }}
                     >
+                        <Marker coordinate={currentLocation}/>
                     </MapView>
                 </View>
                 <View style={GlobalStyles.header}>
@@ -137,7 +182,7 @@ export default class Home extends React.Component {
                     </View>
                 </View>
                 <View style={styles.voteView}>
-                    <VoteView/>
+                    <VoteView placeId={locationId} placeName={locationName}/>
                 </View>
             </View>
         );

@@ -21,11 +21,12 @@ export default class SplashScreen extends React.Component {
         return (
             <View style={GlobalStyles.container}>
                 <ImageBackground
-                    source={Constants.splashImage} style={{
-                    width: '100%',
-                    height: '100%',
-                    flex: 1
-                }}>
+                    source={Constants.splashImage}
+                    style={{
+                        width: '100%',
+                        height: '100%',
+                        flex: 1
+                    }}>
                 </ImageBackground>
             </View>
         );

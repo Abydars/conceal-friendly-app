@@ -2,17 +2,16 @@ import React from 'react';
 import {Text, StyleSheet, Image, View, TouchableOpacity, Button} from 'react-native';
 import {Fragment, Component} from 'react';
 import {Fonts} from './Fonts';
-import {Thumbsup} from './Thumbsup';
-import {Thumbsdown} from './Thumbsdown';
+import {PlaceVote} from './PlaceVote';
 import {Divider} from 'react-native';
 
-const VoteView = ({style}) => {
+const VoteView = ({style, placeName, placeId}) => {
     return (
         <View style={style}>
-            <Text style={styles.placename}>Place Name Here</Text>
+            <Text style={styles.placename}>{placeName}</Text>
             <View style={styles.thumbs}>
-                <Thumbsup/>
-                <Thumbsdown/>
+                <PlaceVote direction={"up"} text={"Carry Friendly"} placeId={placeId}/>
+                <PlaceVote direction={"down"} text={"Gun Free Zone"} placeId={placeId}/>
             </View>
         </View>
     )

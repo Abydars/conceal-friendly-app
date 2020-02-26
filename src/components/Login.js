@@ -87,13 +87,16 @@ export class Login extends React.Component {
         return (
             <StyleProvider style={getTheme(material)}>
                 <Container>
-                    <Content>
-                        <ImageBackground
-                            source={Constants.backgroundImage} style={{
+                    <ImageBackground
+                        source={Constants.backgroundImage}
+                        style={{
+                            resizeMode: 'cover',
                             width: '100%',
                             height: '100%',
-                            paddingBottom: 20
+                            flex: 1,
                         }}>
+                        <Content>
+
                             <View style={styles.container}>
                                 <Image source={require('../assets/img/cinceal-logo.png')}
                                        style={{
@@ -123,8 +126,8 @@ export class Login extends React.Component {
                                 </View>
                                 <CustomButton text="Sign in with Google" color='#21ac75' onPress={this.signIn}/>
                             </View>
-                        </ImageBackground>
-                    </Content>
+                        </Content>
+                    </ImageBackground>
                 </Container>
             </StyleProvider>
         )
