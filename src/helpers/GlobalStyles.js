@@ -2,7 +2,9 @@ import {Fonts} from '../components/Fonts';
 
 export const GlobalStyles = {
     container: {
-        flex: 1
+        flex: 1,
+        width: '100%',
+        height: '100%'
     },
     header: {
         flex: 1,

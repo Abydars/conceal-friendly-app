@@ -25,10 +25,15 @@ class PlaceVote extends React.Component {
         this._getCount();
     }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.placeId !== this.props.placeId) {
+            this._getCount();
+        }
+    }
+
     render() {
         const {count} = this.state;
-        const {placeId, direction, text} = this.props;
-        const icon_img = require('../assets/img/thumbs' + direction + '.png');
+        const {placeId, direction, text, icon_img} = this.props;
 
         return (
             <TouchableOpacity
@@ -47,26 +52,19 @@ class PlaceVote extends React.Component {
 const styles = StyleSheet.create({
     container: {
         width: "50%",
-        height: "70%",
-        borderLeftColor: 'black',
-        borderWidth: 5,
-        borderLeftWidth: 0,
-        borderTopWidth: 0,
-        borderRightWidth: 2,
-        borderBottomWidth: 0,
-        borderColor: '#d6d7da',
+        padding: 10
     },
     placename: {
         color: 'black',
         fontFamily: Fonts.Latoregular,
-        fontSize: 18,
+        fontSize: 14,
         paddingTop: 20,
         textAlign: 'center'
     },
     count: {
         color: 'black',
         fontFamily: Fonts.Latobold,
-        fontSize: 15,
+        fontSize: 14,
         paddingTop: 5,
         marginLeft: 'auto',
         marginRight: 'auto',
