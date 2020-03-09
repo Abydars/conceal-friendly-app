@@ -1,0 +1,71 @@
+{
+  "project_info": {
+    "project_number": "594118781686",
+    "firebase_url": "https://crypto-truck-266720.firebaseio.com",
+    "project_id": "crypto-truck-266720",
+    "storage_bucket": "crypto-truck-266720.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:594118781686:android:09f3f5fa98393f04855ad7",
+        "android_client_info": {
+          "package_name": "com.concealfriendlyy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "594118781686-ul67qc473a8r72g1ttmp7lp9i11lol0i.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.concealfriendlyy",
+            "certificate_hash": "071c505a318a2e489a8ab2d798637868aad84d39"
+          }
+        },
+        {
+          "client_id": "594118781686-n4evgcubl6pogvlq4s1ktjnlm99o895u.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.concealfriendlyy",
+            "certificate_hash": "ef358ec7b0534da824241d81b1a2ff222601aa0a"
+          }
+        },
+        {
+          "client_id": "594118781686-9sgttvfn77q53g07u115p9o2l7rble12.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.concealfriendlyy",
+            "certificate_hash": "5e8f16062ea3cd2c4a0d547876baa6f38cabf625"
+          }
+        },
+        {
+          "client_id": "594118781686-ngbi4avu2gk3hojcp29v3fm7pu55c8np.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCGzcTunW11flavDtA5jgC1KZ7tZfWxIrg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "594118781686-fi4sf8i36qnjul20haunden1jhhnt27q.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "594118781686-olj3le9cam1hstnbg86ujr3tvblf2s4s.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.concealfriendly.app"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

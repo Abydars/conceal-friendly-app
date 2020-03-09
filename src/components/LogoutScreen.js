@@ -7,6 +7,7 @@ import {Constants} from "../helpers/Constants";
 import CustomButton from "./CustomButton";
 import SplashScreen from "./SplashScreen";
 import AsyncStorage from "@react-native-community/async-storage";
+import {GoogleSignin, statusCodes} from '@react-native-community/google-signin';
 
 export default class LogoutScreen extends React.Component {
 
@@ -14,16 +15,19 @@ export default class LogoutScreen extends React.Component {
         super(props);
     }
 
-    _setLoggedIn = async (bool) => {
+    _setLoggedOut = async () => {
         try {
-            await AsyncStorage.setItem('ISLOGGEDIN', bool ? "TRUE" : "FALSE");
+            await AsyncStorage.removeItem('USER_INFO');
+
+            await GoogleSignin.revokeAccess();
+            await GoogleSignin.signOut();
         } catch (error) {
-            // Error saving data
+            console.warn(error);
         }
     };
 
     componentDidMount() {
-        this._setLoggedIn(false).then(() => {
+        this._setLoggedOut().then(() => {
             this.props.navigation.navigate('Login');
         });
     }

@@ -7,6 +7,7 @@ import {Container, Content, getTheme, material, StyleProvider} from "native-base
 import {Constants} from "../helpers/Constants";
 import {GoogleSignin, statusCodes} from '@react-native-community/google-signin';
 import AsyncStorage from '@react-native-community/async-storage';
+import {StoreUser, UpdateUserInfo} from "../helpers/Util";
 
 export class Login extends React.Component {
 
@@ -18,10 +19,11 @@ export class Login extends React.Component {
         };
 
         GoogleSignin.configure({
-            //scopes: [], // what API you want to access on behalf of the user, default is email and profile
-            //webClientId: 'com.googleusercontent.apps.264293766572-29o14e1gk2m9q2f2m1b5v1vmvgqfpra8', // client ID of type WEB for your server (needed to verify user ID and offline access)
+            // scopes: ['email', 'profile'], // what API you want to access on behalf of the user, default is email and profile
+            //webClientId: '579917371371-sa1jhp8isj8m9c9gopk4k4se6b95fb27.apps.googleusercontent.com', // client ID of type WEB for your server (needed to verify user ID and offline access)
             forceConsentPrompt: true, // [Android] if you want to show the authorization prompt at each login.
-            iosClientId: '665001073530-4a5sdhpdc0vc6tgsu6d2v7d3jims2nkg.apps.googleusercontent.com', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+            iosClientId: '', // [iOS] optional, if you want to specify the client ID of type iOS (otherwise, it is taken from GoogleService-Info.plist)
+            // androidClientId: '594118781686-01h7u70jm2hpf6vseg443v7l9n5r43ih.apps.googleusercontent.com'
         });
     }
 
@@ -31,8 +33,9 @@ export class Login extends React.Component {
 
     _checkIsLoggedIn = async () => {
         try {
-            const value = await AsyncStorage.getItem('ISLOGGEDIN');
-            if (value === "TRUE") {
+            const value = await AsyncStorage.getItem('USER_INFO');
+
+            if (value !== null) {
                 this.props.navigation.navigate('Home');
             }
         } catch (error) {
@@ -44,12 +47,8 @@ export class Login extends React.Component {
         });
     };
 
-    _setLoggedIn = async (bool) => {
-        try {
-            await AsyncStorage.setItem('ISLOGGEDIN', bool ? "TRUE" : "FALSE");
-        } catch (error) {
-            // Error saving data
-        }
+    _setLoggedIn = async (userInfo) => {
+        UpdateUserInfo(userInfo).then().catch(err => console.warn(err));
     };
 
     signIn = async () => {
@@ -57,12 +56,17 @@ export class Login extends React.Component {
             await GoogleSignin.hasPlayServices();
             const userInfo = await GoogleSignin.signIn();
 
-            this.setState({userInfo});
+            StoreUser(userInfo.user)
+                .then(user => {
 
-            this._setLoggedIn(true);
-            this.props.navigation.navigate('Home');
+                    // let user_info = {...userInfo.user, ID: user.data.ID};
+
+                    this._setLoggedIn(user.data);
+                    this.props.navigation.navigate('Home');
+                });
 
         } catch (error) {
+            console.warn(JSON.stringify(error));
             if (error.code === statusCodes.SIGN_IN_CANCELLED) {
                 // user cancelled the login flow
             } else if (error.code === statusCodes.IN_PROGRESS) {
@@ -71,8 +75,7 @@ export class Login extends React.Component {
                 // play services not available or outdated
             } else {
                 // some other error happened
-                this._setLoggedIn(true);
-                this.props.navigation.navigate('Home');
+                //this.props.navigation.navigate('Home');
             }
         }
     };

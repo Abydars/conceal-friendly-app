@@ -58,7 +58,7 @@
 		0388CB8664153CD4FF52A176 /* Pods-ConcealFriendlyyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ConcealFriendlyyTests.release.xcconfig"; path = "Target Support Files/Pods-ConcealFriendlyyTests/Pods-ConcealFriendlyyTests.release.xcconfig"; sourceTree = "<group>"; };
 		063929B32B3FA74C9D7F29AA /* Pods-ConcealFriendlyy-tvOS.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-ConcealFriendlyy-tvOS.debug.xcconfig"; path = "Target Support Files/Pods-ConcealFriendlyy-tvOS/Pods-ConcealFriendlyy-tvOS.debug.xcconfig"; sourceTree = "<group>"; };
 		0CACFE23A80E413CB2E771BC /* Lato-Italic.ttf */ = {isa = PBXFileReference; explicitFileType = undefined; fileEncoding = 9; includeInIndex = 0; lastKnownFileType = unknown; name = "Lato-Italic.ttf"; path = "../src/assets/fonts/Lato/Lato-Italic.ttf"; sourceTree = "<group>"; };
-		13B07F961A680F5B00A75B9A /* ConcealFriendlyy.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = ConcealFriendlyy.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		13B07F961A680F5B00A75B9A /* Conceal Friendly.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Conceal Friendly.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		13B07FAF1A68108700A75B9A /* AppDelegate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AppDelegate.h; path = ConcealFriendlyy/AppDelegate.h; sourceTree = "<group>"; };
 		13B07FB01A68108700A75B9A /* AppDelegate.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = AppDelegate.m; path = ConcealFriendlyy/AppDelegate.m; sourceTree = "<group>"; };
 		13B07FB21A68108700A75B9A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
@@ -217,7 +217,7 @@
 		83CBBA001A601CBA00E9B192 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				13B07F961A680F5B00A75B9A /* ConcealFriendlyy.app */,
+				13B07F961A680F5B00A75B9A /* Conceal Friendly.app */,
 				00E356EE1AD99517003FC87E /* ConcealFriendlyyTests.xctest */,
 				2D02E47B1E0B4A5D006451C7 /* ConcealFriendlyy-tvOS.app */,
 				2D02E4901E0B4A5D006451C7 /* ConcealFriendlyy-tvOSTests.xctest */,
@@ -280,7 +280,7 @@
 			);
 			name = ConcealFriendlyy;
 			productName = ConcealFriendlyy;
-			productReference = 13B07F961A680F5B00A75B9A /* ConcealFriendlyy.app */;
+			productReference = 13B07F961A680F5B00A75B9A /* Conceal Friendly.app */;
 			productType = "com.apple.product-type.application";
 		};
 		2D02E47A1E0B4A5D006451C7 /* ConcealFriendlyy-tvOS */ = {
@@ -334,6 +334,10 @@
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
+					};
+					13B07F861A680F5B00A75B9A = {
+						DevelopmentTeam = S6V4B372SH;
+						ProvisioningStyle = Automatic;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
@@ -732,18 +736,24 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = C02789A5D96E3B835CA2D068 /* Pods-ConcealFriendlyy.debug.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 1;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-1";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
 				DEAD_CODE_STRIPPING = NO;
+				DEVELOPMENT_TEAM = S6V4B372SH;
 				INFOPLIST_FILE = ConcealFriendlyy/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.concealfriendly.app;
-				PRODUCT_NAME = ConcealFriendlyy;
+				PRODUCT_NAME = "Conceal Friendly";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Debug;
@@ -752,17 +762,23 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = ACA1B98046728A80520F6A5B /* Pods-ConcealFriendlyy.release.xcconfig */;
 			buildSettings = {
-				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CURRENT_PROJECT_VERSION = 1;
+				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon-1";
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = S6V4B372SH;
 				INFOPLIST_FILE = ConcealFriendlyy/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				MARKETING_VERSION = 1.2;
 				OTHER_LDFLAGS = (
 					"$(inherited)",
 					"-ObjC",
 					"-lc++",
 				);
 				PRODUCT_BUNDLE_IDENTIFIER = com.concealfriendly.app;
-				PRODUCT_NAME = ConcealFriendlyy;
+				PRODUCT_NAME = "Conceal Friendly";
+				PROVISIONING_PROFILE_SPECIFIER = "";
+				TARGETED_DEVICE_FAMILY = "1,2";
 				VERSIONING_SYSTEM = "apple-generic";
 			};
 			name = Release;

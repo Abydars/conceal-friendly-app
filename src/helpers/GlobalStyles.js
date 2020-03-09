@@ -1,4 +1,11 @@
 import {Fonts} from '../components/Fonts';
+import {Dimensions, Platform} from "react-native";
+
+export const SCREEN_HEIGHT = Dimensions.get('window').height;
+export const IS_IPHONE_X = SCREEN_HEIGHT === 812 || SCREEN_HEIGHT === 896;
+export const STATUS_BAR_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 44 : 20) : 0;
+export const HEADER_HEIGHT = Platform.OS === 'ios' ? (IS_IPHONE_X ? 88 : 64) : 64;
+export const NAV_BAR_HEIGHT = HEADER_HEIGHT - STATUS_BAR_HEIGHT;
 
 export const GlobalStyles = {
     container: {
@@ -12,7 +19,7 @@ export const GlobalStyles = {
         padding: 5,
         position: 'absolute',
         zIndex: 9,
-        top: 0,
+        top: STATUS_BAR_HEIGHT,
         left: 0,
         right: 0
     },
@@ -87,11 +94,10 @@ export const GlobalStyles = {
     textArea: {
         height: 200,
         borderRadius: 3,
-        width: 200,
         textAlignVertical: 'top',
         fontSize: 14,
-        paddingVertical: 25,
-        paddingHorizontal: 25,
+        padding: Platform.OS ? 25 : 5,
+        paddingTop: 30,
         margin: 0,
     },
 
@@ -108,13 +114,14 @@ export const GlobalStyles = {
         shadowOpacity: 0.2,
         shadowRadius: 4.32,
         elevation: 6,
-
     },
     textInput: {
         fontSize: 14,
-        paddingHorizontal: 25,
-        paddingVertical: 15,
+        padding: Platform.OS ? 25 : 5,
         borderRadius: 3,
         margin: 0,
     },
+    loader: {
+        color: '#53b584'
+    }
 };

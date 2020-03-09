@@ -10,42 +10,52 @@ import {
     Keyboard,
     StatusBar,
     BackHandler,
-    BackAndroid
+    BackAndroid, Platform, Linking, ActivityIndicator
 } from 'react-native';
-import MapView, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
+import MapViewAnimated, {PROVIDER_GOOGLE, Marker} from 'react-native-maps';
 import {GooglePlacesAutocomplete} from 'react-native-google-places-autocomplete';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import {GlobalStyles} from "../helpers/GlobalStyles";
+import {GlobalStyles, IS_IPHONE_X} from "../helpers/GlobalStyles";
 import {Container, Content, getTheme, material, StyleProvider} from "native-base";
-import {VoteView} from "./Voteview";
 import Geolocation from '@react-native-community/geolocation';
 import {GetLocation, GetRegionForCoordinates} from "../helpers/Util";
 import {Constants} from "../helpers/Constants";
+import {VoteView} from "./Voteview";
+import EventListeners from "../helpers/EventListeners";
 
-const GooglePlacesInput = ({locationName, onChange}) => {
+const GooglePlacesInput = ({locationName, onChange, setRef, defaultValueUpdated}) => {
     return (
         <View>
             <GooglePlacesAutocomplete
                 suppressDefaultStyles={true}
                 placeholder='Search'
                 minLength={2}
-                numberOfLines={1}
+                numberOfLines={2}
                 autoFocus={false}
                 returnKeyType={'search'}
                 keyboardAppearance={'light'}
                 fetchDetails={true}
+                textInputProps={{
+                    ref: (r) => {
+                        setRef(r)
+                    }
+                }}
                 onPress={(data, details = null) => { // 'details' is provided when fetchDetails = true
                     onChange({
                         latitude: details.geometry.location.lat,
                         longitude: details.geometry.location.lng,
                     }, data.description, data.place_id);
                 }}
-                getDefaultValue={() => locationName}
+                enableHighAccuracyLocation={true}
+                getDefaultValue={() => {
+                    setTimeout(defaultValueUpdated, 2000);
+                    return locationName;
+                }}
                 query={{
                     // available options: https://developers.google.com/places/web-service/autocomplete
                     key: Constants.GOOGLE_API_KEY,
                     language: 'en', // language of the results
-                    //types: '(cities)' // default: 'geocode'
+                    // types: 'hotels' // default: 'geocode'
                 }}
                 styles={{
                     textInputContainer: {
@@ -64,9 +74,9 @@ const GooglePlacesInput = ({locationName, onChange}) => {
                     },
                     textInput: {
                         fontSize: 14,
-                        paddingVertical: 5,
+                        paddingVertical: Platform.OS ? 9 : 5,
                         paddingHorizontal: 15,
-                        margin: 0,
+                        margin: 0
                     },
                     description: {
                         paddingVertical: 10,
@@ -96,18 +106,19 @@ const GooglePlacesInput = ({locationName, onChange}) => {
                 }}
                 GooglePlacesSearchQuery={{
                     // available options for GooglePlacesSearch API : https://developers.google.com/places/web-service/search
-                    rankby: 'distance',
-                    //type: ['cafe']
+                    // rankby: 'distance',
+                    // type: ['establishment']
                 }}
                 GooglePlacesDetailsQuery={{
                     // available options for GooglePlacesDetails API : https://developers.google.com/places/web-service/details
                     fields: 'geometry',
                 }}
+                isRowScrollable={true}
                 enablePoweredByContainer={false}
                 //filterReverseGeocodingByTypes={['locality', 'administrative_area_level_3']}
                 currentLocation={false} // Will add a 'Current location' button at the top of the predefined places list
                 //currentLocationLabel="Current location"
-                nearbyPlacesAPI='None' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
+                nearbyPlacesAPI='GooglePlacesSearch' // Which API to use: GoogleReverseGeocoding or GooglePlacesSearch
                 debounce={0} // debounce the requests in ms. Set to 0 to remove debounce. By default 0ms.
             />
         </View>
@@ -120,6 +131,10 @@ export default class Home extends React.Component {
         super(props);
 
         this.state = {
+            userLocation: {
+                latitude: 0,
+                longitude: 0
+            },
             currentLocation: {
                 latitude: 37.78825,
                 longitude: -122.4324
@@ -129,6 +144,9 @@ export default class Home extends React.Component {
             placeFound: false,
             latitudeDelta: 0.015,
             longitudeDelta: 0.0121,
+            autoLocated: false,
+            zoomLevel: 17,
+            loadingDirections: false
         };
     }
 
@@ -138,13 +156,17 @@ export default class Home extends React.Component {
             // {latitude: currentLocation.viewport.northeast.lat, longitude: currentLocation.viewport.northeast.lng},
             // {latitude: currentLocation.viewport.southwest.lat, longitude: currentLocation.viewport.southwest.lng}
         ]);
+
         this.setState({
             locationName,
             currentLocation,
             latitudeDelta,
             longitudeDelta,
-            locationId: locationName
+            locationId: locationId,
+            placeFound: true
         });
+
+        EventListeners.trigger('LocationChanged');
     };
 
     _keyboardDidShow = () => {
@@ -164,6 +186,127 @@ export default class Home extends React.Component {
         return true;
     };
 
+    _setRef = (r) => {
+        this.r = r;
+    };
+
+    _defaultValueUpdated = () => {
+        if (this.r !== undefined)
+            this.r.blur();
+    };
+
+    _onGetDirections = () => {
+        const {currentLocation, userLocation} = this.state;
+
+        this.setState({
+            loadingDirections: true
+        }, () => {
+
+            let link = 'google.navigation:q=' + currentLocation.latitude + '+' + currentLocation.longitude;
+
+            if (Platform.OS === 'ios')
+                link = 'maps://app?saddr=' + userLocation.latitude + '+' + userLocation.longitude + '&daddr=' + currentLocation.latitude + '+' + currentLocation.longitude;
+
+            Linking.openURL(link)
+                .then(() => {
+                    this.setState({
+                        loadingDirections: false
+                    });
+                })
+                .catch(err => {
+                    this.setState({
+                        loadingDirections: false
+                    });
+
+                    Alert.alert('Not available', err.message);
+                });
+        });
+
+    };
+
+    _setLocation = (currentLocation) => {
+
+        this.setState({
+            currentLocation
+        });
+
+        GetLocation(currentLocation, 'establishment', 'distance')
+            .then(res => {
+                //console.log(JSON.stringify(res), currentLocation);
+
+                let excludes = [];
+                let found = false;
+
+                if (res.results?.length > 0) {
+                    for (let i in res.results) {
+
+                        let result = res.results[i];
+                        let locationName = result.name;
+                        let locationId = result.place_id;
+
+                        if (result.types.indexOf('establishment') > -1 && excludes.indexOf(locationName) === -1) {
+
+                            found = true;
+
+                            this.setState({
+                                locationId: locationId,
+                                locationName,
+                                placeFound: true
+                            });
+                            break;
+                            //console.log(result.name + " -- " + result.vicinity);
+
+                        } else if (result.types.indexOf('locality') > -1) {
+                            excludes.push(locationName);
+                        }
+                    }
+
+                } else {
+                    Alert.alert('Error', res.error_message);
+                }
+
+                if (!found) {
+                    this.setState({
+                        placeFound: false
+                    });
+                } else {
+                    EventListeners.trigger('LocationChanged');
+                }
+            })
+            .catch(err => {
+                console.warn(err + "");
+
+                this.setState({
+                    placeFound: false
+                });
+            });
+    };
+
+    _onMapClick = (e) => {
+        const location = e.nativeEvent.coordinate;
+
+        this._setLocation(location);
+    };
+
+    _onMapDragStart = () => {
+
+    };
+
+    _onMapDragEnd = (e) => {
+        const location = e.nativeEvent.coordinate;
+
+        this._setLocation(location);
+    };
+
+    _setMapZoom = (zoom) => {
+        let camera = this.map.getCamera();
+
+        this.map.setCamera({
+            ...camera,
+            zoom
+        });
+    };
+
     componentDidMount() {
         this.backHandler = BackHandler.addEventListener('hardwareBackPress', this._handleBackPress);
         this.keyboardDidShowListener = Keyboard.addListener(
@@ -177,34 +320,38 @@ export default class Home extends React.Component {
 
         Geolocation.getCurrentPosition(
             position => {
-                const currentLocation = {
-                    latitude: position.coords.latitude,
-                    longitude: position.coords.longitude,
-                };
+                const {locationId} = this.state;
+
+                if (locationId === 'X') {
+
+                    let currentLocation = {
+                        latitude: position.coords.latitude,
+                        longitude: position.coords.longitude,
+                    };
+
+                    this.setState({
+                        userLocation: currentLocation,
+                        autoLocated: true
+                    });
+
+                    this._setLocation(currentLocation);
+                }
+
+            }, error => {
 
                 this.setState({
-                    currentLocation
+                    autoLocated: true
                 });
 
-                GetLocation(currentLocation)
-                    .then(res => {
-                        if (res.results?.length > 0) {
-                            let locationName = res.results[0].formatted_address;
-                            let locationId = res.plus_code.global_code;
+                let error_msg = error.message;
 
-                            this.setState({
-                                locationName,
-                                locationId: locationName,
-                                placeFound: true
-                            });
-                        } else {
-                            Alert.alert('Error', "Unable to find location");
-                        }
-                    })
-                    .catch(err => Alert.alert('Error', err + ""));
-            },
-            error => Alert.alert('Error', 'Error locating, please try again'),
-            {enableHighAccuracy: true, timeout: 20000, maximumAge: 1000}
+                if (error.code === 3) {
+                    error_msg = 'Please enable your location service.';
+                }
+
+                Alert.alert('Location Error', error_msg);
+
+            }, {enableHighAccuracy: false, timeout: 5000, maximumAge: 1000}
         );
     }
 
@@ -215,23 +362,39 @@ export default class Home extends React.Component {
     }
 
     render() {
-        const {currentLocation, locationName, locationId, placeFound, latitudeDelta, longitudeDelta} = this.state;
+        const {currentLocation, locationName, locationId, placeFound, latitudeDelta, longitudeDelta, autoLocated, loadingDirections} = this.state;
 
         return (
             <View style={GlobalStyles.container}>
                 <View style={styles.mapViewContainer}>
-                    <MapView
+                    <MapViewAnimated
                         provider={PROVIDER_GOOGLE} // remove if not using Google Maps
                         style={styles.map}
+                        loadingEnabled={true}
+                        moveOnMarkerPress={true}
                         region={{
                             latitude: currentLocation.latitude,
                             longitude: currentLocation.longitude,
                             latitudeDelta: latitudeDelta,
                             longitudeDelta: longitudeDelta,
                         }}
+                        onPress={this._onMapClick}
+                        ref={r => {
+                            this.map = r
+                        }}
                     >
-                        <Marker coordinate={currentLocation}/>
-                    </MapView>
+                        <Marker
+                            // icon={require('../assets/img/marker.png')}
+                            draggable
+                            coordinate={currentLocation}
+                            rotation={50}
+                            zIndex={100}
+                            title={"Place: " + locationName}
+                            description={"Tip: Long press the marker to move"}
+                            onDragStart={this._onMapDragStart}
+                            onDragEnd={this._onMapDragEnd}
+                        />
+                    </MapViewAnimated>
                 </View>
                 <View style={GlobalStyles.header}>
                     <View style={GlobalStyles.headerLeft}>
@@ -241,10 +404,14 @@ export default class Home extends React.Component {
                         />
                     </View>
                     <View style={GlobalStyles.headerCenter}>
+                        {autoLocated &&
                         <GooglePlacesInput
                             locationName={locationName}
                             onChange={this._onSearch}
+                            setRef={this._setRef}
+                            defaultValueUpdated={this._defaultValueUpdated}
                         />
+                        }
                     </View>
                     <View style={GlobalStyles.headerRight}>
                         <TouchableOpacity
@@ -260,7 +427,28 @@ export default class Home extends React.Component {
                 </View>
                 {placeFound &&
                 <View style={styles.voteView}>
-                    <VoteView placeId={locationId} placeName={locationName}/>
+                    <VoteView
+                        Subtitle={() => (
+                            <View>
+                                {!loadingDirections &&
+                                <TouchableOpacity
+                                    style={styles.directionButton}
+                                    onPress={this._onGetDirections}
+                                >
+                                    <Text style={styles.directionButtonText}>Get Directions</Text>
+                                </TouchableOpacity>
+                                }
+                                {loadingDirections &&
+                                <ActivityIndicator size="large" color={GlobalStyles.loader.color}/>
+                                }
+                            </View>
+                        )}
+                        place={{
+                            placeId: locationId,
+                            placeName: locationName,
+                            ...currentLocation
+                        }}
+                    />
                 </View>
                 }
             </View>
@@ -288,12 +476,13 @@ const styles = StyleSheet.create({
     },
     voteView: {
         position: 'absolute',
-        bottom: 20,
+        bottom: IS_IPHONE_X ? 40 : 20,
         left: 20,
         right: 20,
         borderRadius: 5,
         backgroundColor: '#FFF',
         padding: 10,
+        zIndex: 9,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -302,5 +491,12 @@ const styles = StyleSheet.create({
         shadowOpacity: 0.44,
         shadowRadius: 10.32,
         elevation: 16
+    },
+    directionButton: {
+        alignItems: 'center',
+        paddingVertical: 10
+    },
+    directionButtonText: {
+        fontSize: 12
     }
 });

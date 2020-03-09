@@ -40,6 +40,9 @@ target 'ConcealFriendlyy' do
   pod 'react-native-google-maps', :path => rn_maps_path
   pod 'GoogleMaps'
   pod 'Google-Maps-iOS-Utils'
+  
+  # add pods for desired Firebase products
+  # https://firebase.google.com/docs/ios/setup#available-pods
 
   target 'ConcealFriendlyyTests' do
     inherit! :search_paths

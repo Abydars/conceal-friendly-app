@@ -29,23 +29,23 @@ export default class AboutScreen extends React.Component {
                         </View>
                     )}/>
                     <Content style={{...GlobalStyles.pageContent, marginTop: 200}}>
-                        <Text style={GlobalStyles.pageText}>The creators of Conceal Friendly came up with this idea for
-                            2 reasons.</Text>
+                        <Text style={GlobalStyles.pageText}>The safety of others is important to us. Safety includes the
+                            option to conceal carry within legal limits. Many gun owners have shared stories with us
+                            about attending events, going to restaurants, etc., and finding themselves in the situation
+                            that their gun is not welcome with them.</Text>
 
-                        <Text style={GlobalStyles.pageText}>#1 We wanted to support businesses that support and
-                            appreciate the Second Amendment. We only
-                            wanted to patron these places to support them in return.</Text>
+                        <Text style={GlobalStyles.pageText}>We built this application to provide a quick reference so
+                            you will know if businesses are gun-friendly before you leave the house. Your gun can then
+                            stay safely at home rather than locked in your car.</Text>
 
-                        <Text style={GlobalStyles.pageText}>#2 We got sick and tired of ordering tickets or setting
-                            reservations and showing up only to
-                            find out they are not a CONCEAL FRIENDLY organization and we had to go back and lock our
-                            firearms (and our right to protect ourselves) in the trunk of our car.</Text>
+                        <Text style={GlobalStyles.pageText}>Your contributions to the database are greatly appreciated.
+                            We can all help each other make the best Conceal Carry decisions together!</Text>
 
-                        <Text style={GlobalStyles.pageText}>Help us all with this by only patroning conceal friendly
-                            places. If you find a place that
-                            isn't listed in our database, the business has changed to a gun free zone, or they decided
-                            they wanted to support the second amendment please mark it correctly. We are all only going
-                            to be strong if we support ourselves.
+                        <Text style={GlobalStyles.pageText}>For each business you give a conceal friendly or gun free
+                            zone rating to you will be entered into a drawing for prizes like new holsters, ammo guards,
+                            and one person a month will win a 1 year membership to USCCA Elite, a $564 value! So go to
+                            the website or app and mark the businesses you frequent everyday and help all conceal carry
+                            holders KNOW BEFORE THEY GO!
                         </Text>
                     </Content>
                 </ImageBackground>

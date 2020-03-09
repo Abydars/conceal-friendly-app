@@ -14,6 +14,7 @@ import AboutScreen from "./src/components/AboutScreen";
 import ProfileScreen from "./src/components/ProfileScreen";
 import SplashScreen from "./src/components/SplashScreen";
 import LogoutScreen from "./src/components/LogoutScreen";
+import CustomDrawerContent from "./src/components/CustomDrawerContent";
 
 const Stack = createStackNavigator();
 const Drawer = createDrawerNavigator();
@@ -22,7 +23,9 @@ const HomeNavigation = () => (
     <Drawer.Navigator
         initialRouteName="Home"
         drawerPosition={"right"}
-        drawerType={"slide"}>
+        drawerType={"slide"}
+        drawerContent={props => <CustomDrawerContent {...props}/>}
+    >
         <Drawer.Screen name="Home" component={Home}/>
         <Drawer.Screen name="Contact Support" component={ContactScreen}/>
         <Drawer.Screen name="Profile" component={ProfileScreen}/>

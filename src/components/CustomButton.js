@@ -3,7 +3,7 @@ import {Text, StyleSheet, Image, View, TouchableOpacity, Button} from 'react-nat
 
 const CustomButton = props => {
     const content = (
-        <View style={[styles.button, {backgroundColor: props.color}]}>
+        <View style={[styles.button, {backgroundColor: props.color}, props.style]}>
             <Text style={styles.text}>{props.text}</Text>
         </View>
     )
